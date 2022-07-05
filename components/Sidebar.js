@@ -16,7 +16,7 @@ const Sidebar = () => {
 
   return (
     <div className={styles.container}>
-        <div className={styles.profile}>
+        {/* <div className={styles.profile}>
             {
                 isAuthenticated && (
                 <>
@@ -54,7 +54,8 @@ const Sidebar = () => {
                 </>
                 )
             }
-        </div>
+        </div> */}
+        sidebar
     </div>
   )
 }
