@@ -19,7 +19,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         appId={'wiwXEfK7g8IAWMFFgXaDqThTwOgKKcgjGSxu9fQQ'}
       >
         <AmazonProvider>
-          <Component {...pageProps} />
+          <ModalProvider>
+            <Component {...pageProps} />
+          </ModalProvider>
         </AmazonProvider>
       </MoralisProvider>
     
