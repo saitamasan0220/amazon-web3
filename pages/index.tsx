@@ -1,7 +1,4 @@
-// import type { NextPage } from 'next'
-// import Head from 'next/head'
-// import Image from 'next/image'
-
+import Main from '../components/Main'
 import Sidebar from '../components/Sidebar'
 
 const styles = {
@@ -12,7 +9,7 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <Sidebar/>
-      {/* <Main/> */}
+      <Main/>
     </div>
   )
 }

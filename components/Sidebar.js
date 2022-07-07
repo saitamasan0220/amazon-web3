@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import logo from '../assets/amazon_logo.png'
 import logoFull from '../assets/amazon_logo_full.png'
 import Image from 'next/image'
@@ -10,11 +10,15 @@ import { ConnectButton } from 'web3uikit'
 import { AiOutlineHistory } from 'react-icons/ai'
 import Link from 'next/link'
 
-const isAuthenticated = true
-
 const Sidebar = () => {
 
-    const username = 'Lance'
+    const {
+        isAuthenticated,
+            nickname,
+            setNickname,
+            username,
+            handleSetUsername
+    } = useContext(AmazonContext)
 
     const styles = {
         container: `h-full w-[300px] flex flex-col bg-[#fff] static`,
@@ -31,6 +35,12 @@ const Sidebar = () => {
         username: `flex items-center w-full justify-center`,
         setNickname: `text-lg font-bold flex flex-1 items-center mt-[20px] mb-[20px] text-white`,
     }
+
+    useEffect(() => {
+        console.log('isAuthenticated: ', isAuthenticated)
+        console.log('username: ', username)
+        console.log('nickname: ', nickname)
+    }, [isAuthenticated, username, nickname])
 
     return (
         <div className={styles.container}>
@@ -54,8 +64,8 @@ const Sidebar = () => {
                                         type="text" 
                                         placeholder="Username..."
                                         className={styles.usernameInput} 
-                                        // value={nickname}
-                                        // onChange={e => setNickname(e.target.value)}
+                                        value={nickname}
+                                        onChange={e => setNickname(e.target.value)}
                                     />
                                 </div>
                                 <button 
