@@ -3,6 +3,7 @@ import {useMoralis, useMoralisQuery} from 'react-moralis'
 import {amazonAbi, amazonCoinAddress} from '../lib/constants'
 import {ethers} from 'ethers'
 
+
 export const AmazonContext = createContext()
 
 export const AmazonProvider = ({children}) => {
@@ -17,6 +18,7 @@ export const AmazonProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(false)
     const [balance, setBalance] = useState('')
     const [recentTransactions, setRecentTransactions] = useState([])
+    const [ownedItems, setOwnedItems] = useState([])
 
     const {
         authenticate,
@@ -61,8 +63,42 @@ export const AmazonProvider = ({children}) => {
         }
     }
 
+    const listenToUpdates = async () => {
+        let query = new Moralis.Query('EthTransactions')
+        console.log("LISTENING")
+        let subscription = await query.subscribe()
+        subscription.on('update', async object => {
+            console.log('New Transaction')
+            console.log(object)
+            setRecentTransactions([object])
+        })
+    }
+
+    // useEffect(async () => {
+    //     // console.log(assetsData)
+    //     await enableWeb3()
+    //     await getAssets()
+    //     await getOwnedAssets()
+    // }, [userData, assetsData, assetsDataIsLoading, userDataisLoading])
+
     useEffect(() => {
         ;(async() => {
+            if(isWeb3Enabled){
+                await getAssets()
+                await getOwnedAssets()
+            } else {
+                await enableWeb3()
+            }
+        })()
+    }, [isWeb3Enabled, assetsData, assetsDataIsLoading, userDataisLoading])
+
+    useEffect(() => {
+        ;(async() => {
+
+            if (!isWeb3Enabled) {
+                await enableWeb3()
+            }
+
             if(isAuthenticated) {
                 await getBalance()
                 const currentUsername = await user?.get('nickname')
@@ -72,14 +108,6 @@ export const AmazonProvider = ({children}) => {
             }
         })()
     }, [isAuthenticated, user, username, currentAccount, balance, getBalance, listenToUpdates])
-
-    useEffect(() => {
-        ;(async() => {
-            if(isWeb3Enabled){
-                await getAssets()
-            }
-        })()
-    }, [isWeb3Enabled, assetsData, assetsDataIsLoading])
 
     const handleSetUsername = () => {
         if (user) {
@@ -153,21 +181,34 @@ export const AmazonProvider = ({children}) => {
         )
     }
 
-    const listenToUpdates = async () => {
-        let query = new Moralis.Query('EthTransactions')
-        console.log("LISTENING")
-        let subscription = await query.subscribe()
-        subscription.on('update', async object => {
-            console.log('New Transaction')
-            console.log(object)
-            setRecentTransactions([object])
-        })
-    }
-
     const getAssets = async () => {
         try {
             await enableWeb3()
             setAssets(assetsData)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const getOwnedAssets = async () => {
+        try {
+            // if(userData[0] && userData[0].attributes.ownedAssets) {
+            // if(userData[0].attributes.ownedAssets) {
+            if(userData[0]) {
+
+                console.log('userData[0]: ', userData[0]);
+                console.log('userData[0].attributes.ownedAssets: ', userData[0].attributes.ownedAssets);
+
+                // setOwnedItems(prevItems => {
+                //     console.log('prevItems: ', prevItems);
+                    
+                //     [...prevItems, userData[0].attributes.ownedAssets]
+                // })
+
+                setOwnedItems(                    
+                    [userData[0].attributes.ownedAssets]
+                )
+            }
         } catch (error) {
             console.log(error)
         }
@@ -194,7 +235,8 @@ export const AmazonProvider = ({children}) => {
                 currentAccount,
                 buyTokens,
                 buyAsset,
-                recentTransactions
+                recentTransactions,
+                ownedItems
             }}
         >
             {children}
