@@ -12,25 +12,29 @@ const Card = ({item}) => {
         price: `text-md font-bold flex justify-center`,
         coins: `ml-[10px]`
     }
-  return (
-    <div className={styles.cardContainer}>
-        <div className={styles.card}>
-            <Image
-                src={item.src}
-                className='object-cover object-center'
-                width={190}
-                height={250}
-                alt='product'
-            />
-        </div>
-        <div>
-            <div className={styles.cardTitle}>
-                {item.name}
+    const {buyAsset} = useContext(AmazonContext)
+    return (
+        <div 
+            className={styles.cardContainer}
+            onClick={() => buyAsset(item.price, item)}
+        >
+            <div className={styles.card}>
+                <Image
+                    src={item.src}
+                    className='object-cover object-center'
+                    width={190}
+                    height={250}
+                    alt='product'
+                />
             </div>
-            <div className={styles.price}>{item.price} AC <FaCoins className={styles.coins}/></div>
+            <div>
+                <div className={styles.cardTitle}>
+                    {item.name}
+                </div>
+                <div className={styles.price}>{item.price} AC <FaCoins className={styles.coins}/></div>
+            </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default Card
