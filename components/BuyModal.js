@@ -30,7 +30,7 @@ const BuyModal = ({close}) => {
         setIsLoading,
         setEtherscanLink,
         etherscanLink,
-        buyTokens
+        buyTokens,
     } = useContext(AmazonContext)
 
     useEffect(() => {
@@ -46,7 +46,7 @@ const BuyModal = ({close}) => {
         <div className={styles.container}>
             {isLoading ? (
                 <>
-                    <div className={loaderContainer}>
+                    <div className={styles.loaderContainer}>
                         <HashLoader size={80}/>
                     </div>
                 </>
@@ -92,12 +92,8 @@ const BuyModal = ({close}) => {
                             <div className={styles.success}>
                                 Transaction Successful! Check out your receipt for your transaction.
                             </div>
-                            <Link href={`${etherscanLink}`}
-                                className={styles.etherscan}
-                            >
-                                <a href="" className={styles.etherscan}
-                                    target='_blank'
-                                >
+                            <Link href={`${etherscanLink}`} className={styles.etherscan}>
+                                <a className={styles.etherscan} target='_blank'>
                                     Transaction Receipt
                                 </a>
                             </Link>

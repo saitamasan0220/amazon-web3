@@ -142,7 +142,8 @@ export const AmazonProvider = ({children}) => {
                 setIsLoading,
                 setEtherscanLink,
                 etherscanLink,
-                currentAccount
+                currentAccount,
+                buyTokens
             }}
         >
             {children}
