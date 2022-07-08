@@ -1,5 +1,5 @@
 import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+// import type { AppProps } from 'next/app'
 import {MoralisProvider} from 'react-moralis'
 import App from 'next/app'
 import { AmazonProvider } from '../context/AmazonContext'
@@ -9,7 +9,8 @@ import { ModalProvider } from 'react-simple-hook-modal'
 // const ServerUrl=process.env.NEXT_PUBLIC_MORALIS_APP_ID
 // console.log("App ID: ", AppId, " ServerUrl: ", ServerUrl)
 
-function MyApp({ Component, pageProps }: AppProps) {
+// function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }) {
   return (
     <div>
       <MoralisProvider
