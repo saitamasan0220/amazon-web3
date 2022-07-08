@@ -16,6 +16,7 @@ export const AmazonProvider = ({children}) => {
     const [etherscanLink, setEtherscanLink] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [balance, setBalance] = useState('')
+    const [recentTransactions, setRecentTransactions] = useState([])
 
     const {
         authenticate,
@@ -70,7 +71,7 @@ export const AmazonProvider = ({children}) => {
                 setCurrentAccount(account)
             }
         })()
-    }, [isAuthenticated, user, username, currentAccount, balance, getBalance])
+    }, [isAuthenticated, user, username, currentAccount, balance, getBalance, listenToUpdates])
 
     useEffect(() => {
         ;(async() => {
@@ -107,18 +108,18 @@ export const AmazonProvider = ({children}) => {
 
             let transaction = await Moralis.transfer(options)
             const receipt = await transaction.wait()
-
+            console.log("RUNNING: ", receipt)
             if(receipt) {
-                const res = userData[0].add('ownedAsset', {
+                console.log("WAITING FOR RECEIPT")
+                const res = userData[0].add('ownedAssets', {
                     ...asset,
                     purchaseDate: Date.now(),
                     etherscanLink: `https://rinkeby.etherscan.io/tx/${receipt.transactionHash}`
                 })
+                await res.save().then(() => {
+                    alert("You've successfully purchased this asset")
+                })
             }
-
-            await res.save().then(() => {
-                alert("You've successfully purchased this asset")
-            })
         } catch (error) {
             console.log(error)
         }
@@ -151,6 +152,18 @@ export const AmazonProvider = ({children}) => {
             `https://rinkeby.etherscan.io/tx/${receipt.transactionHash}`
         )
     }
+
+    const listenToUpdates = async () => {
+        let query = new Moralis.Query('EthTransactions')
+        console.log("LISTENING")
+        let subscription = await query.subscribe()
+        subscription.on('update', async object => {
+            console.log('New Transaction')
+            console.log(object)
+            setRecentTransactions([object])
+        })
+    }
+
     const getAssets = async () => {
         try {
             await enableWeb3()
@@ -180,7 +193,8 @@ export const AmazonProvider = ({children}) => {
                 etherscanLink,
                 currentAccount,
                 buyTokens,
-                buyAsset
+                buyAsset,
+                recentTransactions
             }}
         >
             {children}
